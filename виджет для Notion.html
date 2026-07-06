@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Health Tools</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0f0f10;
+        color: #eaeaea;
+        margin: 0;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .card {
+        background: #1a1a1d;
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 0 1px #2a2a2e;
+    }
+
+    h3 {
+        margin: 0 0 6px 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    input {
+        width: 100%;
+        padding: 7px 8px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: 1px solid #333;
+        background: #111;
+        color: #fff;
+        outline: none;
+    }
+
+    .result {
+        margin-top: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #d0d0d0;
+        cursor: pointer;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .small {
+        font-size: 12px;
+        color: #9a9a9a;
+        margin-top: 4px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="grid">
+
+    <div class="card">
+        <h3>СОН — HH:MM → минуты</h3>
+        <input id="t1" placeholder="7:35" oninput="toMin()">
+        <div class="result" id="r1" onclick="copy('r1')"></div>
+        <div class="small">клик = копировать</div>
+    </div>
+
+    <div class="card">
+        <h3>СОН — минуты → HH:MM</h3>
+        <input id="t2" placeholder="455" oninput="toTime()">
+        <div class="result" id="r2" onclick="copy('r2')"></div>
+    </div>
+
+    <div class="card">
+        <h3>СОН — HH:MM → часы (десятичные)</h3>
+        <input id="t3" placeholder="7:30" oninput="toDec()">
+        <div class="result" id="r3" onclick="copy('r3')"></div>
+    </div>
+
+    <div class="card">
+        <h3>СОН (единый блок)</h3>
+        <input id="t4" placeholder="7:35" oninput="fullCalc()">
+        <div class="result" id="r4"></div>
+        <div class="small">мин | часы | dec</div>
+    </div>
+
+</div>
+
+<script>
+
+function toMin() {
+    let v = document.getElementById("t1").value;
+    let p = v.split(":");
+    if (p.length !== 2) return;
+
+    let h = parseInt(p[0]);
+    let m = parseInt(p[1]);
+    if (isNaN(h) || isNaN(m)) return;
+
+    document.getElementById("r1").innerText = (h*60 + m) + " min";
+}
+
+function toTime() {
+    let v = parseInt(document.getElementById("t2").value);
+    if (isNaN(v)) return;
+
+    let h = Math.floor(v / 60);
+    let m = v % 60;
+
+    document.getElementById("r2").innerText =
+        h + "h " + (m < 10 ? "0" : "") + m + "m";
+}
+
+function toDec() {
+    let v = document.getElementById("t3").value;
+    let p = v.split(":");
+    if (p.length !== 2) return;
+
+    let h = parseInt(p[0]);
+    let m = parseInt(p[1]);
+    if (isNaN(h) || isNaN(m)) return;
+
+    document.getElementById("r3").innerText =
+        (h + m/60).toFixed(2) + " h";
+}
+
+function fullCalc() {
+    let v = document.getElementById("t4").value;
+    let p = v.split(":");
+    if (p.length !== 2) return;
+
+    let h = parseInt(p[0]);
+    let m = parseInt(p[1]);
+    if (isNaN(h) || isNaN(m)) return;
+
+    let min = h*60 + m;
+    let dec = (h + m/60).toFixed(2);
+
+    document.getElementById("r4").innerText =
+        min + " min  |  " + h + "h " + m + "m  |  " + dec + " h";
+}
+
+function copy(id) {
+    let text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+}
+
+</script>
+
+</body>
+</html>
